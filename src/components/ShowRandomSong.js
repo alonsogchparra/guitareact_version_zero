@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class ShowRandomSong extends Component {
 
   state = {
-    musicList: [
+    songList: [
       {id: 1, song: 'I bet you look good on the dancefloor', artist: 'Artic Monkeys'},
       {id: 2, song: 'Warmness on the soul', artist: 'Avenged Sevenfold'},
       {id: 3, song: 'Punk Rock Song', artist: 'Bad Religion'},
@@ -26,14 +26,14 @@ class ShowRandomSong extends Component {
       {id: 20, song: 'Last Nite', artist: 'The Stroke'},
       {id: 21, song: 'Hash Pipe', artist: 'Weezer'},
     ],
-    musicListItem: '',
-    copyMusicList: [],
+    songListItem: '',
+    copySongList: [],
     isClicked: false
   }
 
   componentDidMount() {
     this.setState({
-      copyMusicList: this.state.musicList
+      copySongList: this.state.songList
     });
   }
 
@@ -44,11 +44,63 @@ class ShowRandomSong extends Component {
     return result;
   }
 
+  getSong = () => {
+
+    const { songList } = this.state;
+
+    this.setState({
+      isClicked: true
+    });
+
+    if (songList.length === 0) {
+
+      this.setState({
+        songListItem: ''
+      });
+
+    } else {
+
+      let randomIndex = this.getRandomNumber(0, songList.length);
+      let randomSong = songList[randomIndex];
+
+      this.setState(prevState => {
+        return {
+          songList: prevState.songList.filter(music => music.song !== randomSong.song)
+        }
+      });
+
+      this.setState({
+        songListItem: randomSong
+      });
+
+    }
+  }
+
+  startOver = () => {
+    this.setState({
+      songList: this.state.copySongList,
+      isClicked: false
+    });
+  }
 
   render () {
+
+    const { songList, songListItem, isClicked } = this.state;
+
+    const showResult = (songList.length === 0 && songListItem === '') ? (
+      <div>
+        <h2>No more songs! Do you want to start over?</h2>
+        <button onClick={() => this.startOver()}>Play again</button>
+      </div>
+    ) : (
+      <h2>Song: {songListItem.song}. <br /> Artist/Band: {songListItem.artist}</h2>
+    )
+
     return (
       <div>
-
+        <h1>Show Random Song!</h1>
+        { isClicked ? showResult : <h2>Ready to play some good music!?</h2>}
+        <button onClick={() => this.getSong()}>Show Random</button>
       </div>
     )
   }
