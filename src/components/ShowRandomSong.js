@@ -37,6 +37,13 @@ class ShowRandomSong extends Component {
     });
   }
 
+  getRandomNumber = (min, max) => {
+    let stepOne = max - min;
+    let stepTwo = Math.random() * stepOne;
+    let result = Math.floor(stepTwo) + min;
+    return result;
+  }
+
 
   render () {
     return (
